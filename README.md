@@ -9,9 +9,9 @@ This system provides comprehensive traffic management capabilities for your Spar
 - **Green Light Detection**: Allows robot to proceed
 - **Color Analysis**: Uses HSV color space for reliable detection
 
-### 2. Children Crossing Management
-- **Child Detection**: Detects children on zebra crossings
-- **Automatic Stop**: Stops robot when children are detected
+### 2. Nocodiile Crossing Management
+- **Nocodile Detection**: Detects nocodile
+- **Automatic Stop**: Stops robot when nocodile is detected
 - **Safety Priority**: Highest priority in traffic decisions
 
 ### 3. Zebra Crossing Awareness
@@ -242,3 +242,4 @@ For issues or questions:
 2. Verify camera topic: `rostopic list | grep camera`
 3. Test YOLO model: `python3 -c "from ultralytics import YOLO; YOLO('yolo11n.pt').predict('test_image.jpg')"`
 4. Monitor traffic status: `rostopic echo /traffic/status`
+
