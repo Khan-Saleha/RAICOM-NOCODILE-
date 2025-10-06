@@ -1,1 +1,10 @@
+# requirements.txt for traffic_controller.py
+# Install with: pip install -r requirements.txt (in activated venv)
+# Assumes CPU PyTorch; for GPU (in WSL with NVIDIA), use: pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
+# ROS deps (rospy, sensor_msgs, etc.) are provided by system ROS install—source setup.bash!
 
+numpy==1.24.3
+opencv-python==4.8.1.78
+torch==2.1.0
+torchvision==0.16.0
+ultralytics==8.2.48
