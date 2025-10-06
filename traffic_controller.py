@@ -44,25 +44,25 @@ class TrafficController:
         self.stable_threshold = 5  # Frames needed for stable detection
         
         # Traffic Light Detection
-        self.traffic_light_classes = ['traffic light']
+        self.traffic_light_classes = ['red light', 'green light']
         self.red_light_detected = False
         self.green_light_detected = False
         self.traffic_light_stable_count = 0
         
-        # Children Detection
-        self.child_classes = ['person']
-        self.child_detected = False
-        self.child_stable_count = 0
+        # nocodile Detection
+        self.nocodile_classes = ['nocodile']
+        self.nocodile_detected = False
+        self.nocodile_stable_count = 0
         self.zebra_crossing_detected = False
         
         # Zebra Crossing Detection
-        self.zebra_crossing_classes = ['zebra crossing', 'crosswalk']
+        self.zebra_crossing_classes = ['zebra crossing']
         self.zebra_crossing_stable_count = 0
         self.zebra_crossing_distance_threshold = 150  # pixels (adjust based on camera setup)
         
         # Robot Control
-        self.robot_speed = 0.2  # Normal speed
-        self.slow_speed = 0.05  # Slow speed for zebra crossing
+        self.robot_speed = 0.5  # Normal speed
+        self.slow_speed = 0.2  # Slow speed for zebra crossing
         self.stop_speed = 0.0   # Stop speed
         
         # Current robot state
@@ -112,7 +112,7 @@ class TrafficController:
         # Reset detection flags
         self.red_light_detected = False
         self.green_light_detected = False
-        self.child_detected = False
+        self.nocodile_detected = False
         self.zebra_crossing_detected = False
         
         for result in results:
@@ -135,12 +135,12 @@ class TrafficController:
                         self.detect_traffic_light_color(cv_image, int(x1), int(y1), int(x2), int(y2))
                         self.draw_traffic_light_detection(cv_image, int(x1), int(y1), int(x2), int(y2), class_name, confidence)
                     
-                    # Children Detection
-                    elif class_name in self.child_classes:
-                        # Check if child is in zebra crossing area
-                        if self.is_child_on_zebra_crossing(center_x, center_y, cv_image):
-                            self.child_detected = True
-                            self.draw_child_detection(cv_image, int(x1), int(y1), int(x2), int(y2), class_name, confidence)
+                    # nocodile Detection
+                    elif class_name in self.nocodile_classes:
+                        # Check if nocodile is in zebra crossing area
+                        if self.is_nocodile_on_zebra_crossing(center_x, center_y, cv_image):
+                            self.nocodile_detected = True
+                            self.draw_nocodile_detection(cv_image, int(x1), int(y1), int(x2), int(y2), class_name, confidence)
                     
                     # Zebra Crossing Detection
                     elif class_name in self.zebra_crossing_classes:
@@ -188,9 +188,9 @@ class TrafficController:
         elif green_ratio > 0.1:  # Threshold for green detection
             self.green_light_detected = True
 
-    def is_child_on_zebra_crossing(self, center_x, center_y, image):
-        """Check if child is on zebra crossing using image analysis"""
-        # Look for zebra crossing patterns near the child
+    def is_nocodile_on_zebra_crossing(self, center_x, center_y, image):
+        """Check if nocodile is on zebra crossing using image analysis"""
+        # Look for zebra crossing patterns near the nocodile
         # This is a simplified approach - in practice, you'd use more sophisticated detection
         
         # Check bottom portion of image for zebra crossing patterns
@@ -232,16 +232,16 @@ class TrafficController:
         else:
             self.traffic_light_stable_count = 0
         
-        # Priority 2: Children on Zebra Crossing
-        if self.child_detected and self.zebra_crossing_detected:
+        # Priority 2: nocodile on Zebra Crossing
+        if self.nocodile_detected:
             self.robot_state = "STOPPED"
             self.current_speed = self.stop_speed
-            self.child_stable_count += 1
+            self.nocodile_stable_count += 1
         else:
-            self.child_stable_count = 0
+            self.nocodile_stable_count = 0
         
         # Priority 3: Zebra Crossing Approach (slow down)
-        if self.zebra_crossing_detected and not self.child_detected:
+        if self.zebra_crossing_detected and not self.nocodile_detected:
             self.robot_state = "SLOWING"
             self.current_speed = self.slow_speed
             self.zebra_crossing_stable_count += 1
@@ -250,7 +250,7 @@ class TrafficController:
         
         # Default: Normal movement if no traffic conditions
         if (not self.red_light_detected and not self.green_light_detected and 
-            not self.child_detected and not self.zebra_crossing_detected):
+            not self.nocodile_detected and not self.zebra_crossing_detected):
             self.robot_state = "MOVING"
             self.current_speed = self.robot_speed
 
@@ -273,7 +273,7 @@ class TrafficController:
     def publish_traffic_status(self):
         """Publish traffic status information"""
         status_msg = String()
-        status_msg.data = f"state:{self.robot_state}:speed:{self.current_speed}:red_light:{self.red_light_detected}:green_light:{self.green_light_detected}:child:{self.child_detected}:zebra:{self.zebra_crossing_detected}"
+        status_msg.data = f"state:{self.robot_state}:speed:{self.current_speed}:red_light:{self.red_light_detected}:green_light:{self.green_light_detected}:nocodile:{self.nocodile_detected}:zebra:{self.zebra_crossing_detected}"
         self.traffic_status_pub.publish(status_msg)
 
     def draw_traffic_light_detection(self, image, x1, y1, x2, y2, class_name, confidence):
@@ -285,12 +285,12 @@ class TrafficController:
         label = f"{class_name} ({light_status}): {confidence:.2f}"
         cv2.putText(image, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
 
-    def draw_child_detection(self, image, x1, y1, x2, y2, class_name, confidence):
-        """Draw child detection on zebra crossing"""
+    def draw_nocodile_detection(self, image, x1, y1, x2, y2, class_name, confidence):
+        """Draw nocodile detection on zebra crossing"""
         color = (0, 0, 255)  # Red for danger
         cv2.rectangle(image, (x1, y1), (x2, y2), color, 2)
         
-        label = f"CHILD ON CROSSING: {confidence:.2f}"
+        label = f"nocodile ON CROSSING: {confidence:.2f}"
         cv2.putText(image, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, color, 2)
 
     def draw_zebra_crossing_detection(self, image, x1, y1, x2, y2, class_name, confidence):
@@ -313,9 +313,9 @@ class TrafficController:
         elif self.green_light_detected:
             cv2.putText(image, "GREEN LIGHT - MOVING", (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
         
-        # Add child detection status
-        if self.child_detected:
-            cv2.putText(image, "CHILD DETECTED - STOPPING", (10, 90), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
+        # Add nocodile detection status
+        if self.nocodile_detected:
+            cv2.putText(image, "nocodile DETECTED - STOPPING", (10, 90), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
         
         # Add zebra crossing status
         if self.zebra_crossing_detected:

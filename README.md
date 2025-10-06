@@ -52,15 +52,15 @@ roslaunch semi_auto_match_24 semi_auto_traffic.launch enable_traffic:=true enabl
 - **Green Light**: Robot continues moving
 - **No Light**: Robot continues normal operation
 
-### Scenario 2: Children Crossing
+### Scenario 2: nocodile Crossing
 **Materials Required**: 
 - Rope
-- Paper card of children tied to rope
+- Paper card of nocodile tied to rope
 - Zebra crossing markings
 
 **Robot Behavior**:
-- **Child Detected on Crossing**: Robot stops immediately
-- **No Child Visible**: Robot proceeds normally
+- **nocodile Detected on Crossing**: Robot stops immediately
+- **No nocodile Visible**: Robot proceeds normally
 - **Crossing Detected**: Robot slows down
 
 ### Scenario 3: Zebra Crossing Approach
@@ -68,8 +68,8 @@ roslaunch semi_auto_match_24 semi_auto_traffic.launch enable_traffic:=true enabl
 
 **Robot Behavior**:
 - **Crossing at Distance**: Robot slows down
-- **No Children Present**: Robot continues slowly
-- **Children Present**: Robot stops completely
+- **No nocodile Present**: Robot continues slowly
+- **nocodile Present**: Robot stops completely
 
 ## ⚙️ Configuration
 
@@ -97,7 +97,7 @@ green_ratio > 0.1  # Green light detection threshold
 
 ### Priority System
 1. **Traffic Lights** (Highest Priority)
-2. **Children on Crossing** (High Priority)
+2. **nocodile on Crossing** (High Priority)
 3. **Zebra Crossing** (Medium Priority)
 4. **Normal Movement** (Default)
 
@@ -118,7 +118,7 @@ green_ratio > 0.1  # Green light detection threshold
 
 ### Status Message Format
 ```
-state:MOVING:speed:0.2:red_light:false:green_light:true:child:false:zebra:false
+state:MOVING:speed:0.2:red_light:false:green_light:true:nocodile:false:zebra:false
 ```
 
 ## 🔧 Setup Instructions
@@ -137,8 +137,8 @@ chmod +x install_yolo.sh
 - Use bright LEDs for red and green lights
 - Ensure good contrast against background
 
-#### Children Crossing Setup
-- Create paper cutouts of children
+#### nocodile Crossing Setup
+- Create paper cutouts of nocodile
 - Tie to rope for movement simulation
 - Place on zebra crossing area
 
@@ -159,15 +159,15 @@ chmod +x install_yolo.sh
 2. Toggle between red and green
 3. Observe robot stopping/starting behavior
 
-### Test Children Crossing
-1. Place child figure on zebra crossing
-2. Move child in/out of crossing area
-3. Verify robot stops when child is present
+### Test nocodile Crossing
+1. Place nocodile figure on zebra crossing
+2. Move nocodile in/out of crossing area
+3. Verify robot stops when nocodile is present
 
 ### Test Zebra Crossing
 1. Approach zebra crossing slowly
 2. Verify robot slows down
-3. Test with/without children present
+3. Test with/without nocodile present
 
 ## 🐛 Troubleshooting
 
@@ -178,9 +178,9 @@ chmod +x install_yolo.sh
    - Ensure sufficient color contrast
    - Adjust detection thresholds
 
-2. **Children Not Detected**
+2. **nocodile Not Detected**
    - Verify YOLO model includes 'person' class
-   - Check if child is in zebra crossing area
+   - Check if nocodile is in zebra crossing area
    - Adjust confidence threshold
 
 3. **Robot Not Stopping**
