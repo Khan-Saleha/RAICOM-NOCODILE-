@@ -8,3 +8,8 @@ opencv-python==4.8.1.78
 torch==2.1.0
 torchvision==0.16.0
 ultralytics==8.2.48
+rospy
+sensor_msgs
+cv_bridge
+std_msgs
+geometry_msgs
