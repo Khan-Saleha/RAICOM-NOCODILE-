@@ -7,7 +7,7 @@ numpy==1.24.3
 opencv-python==4.8.1.78
 torch==2.1.0
 torchvision==0.16.0
-ultralytics==8.2.48
+ultralytics==8.3.14
 rospy
 ros-noetic-std-msgs
 ros-noetic-sensor-msgs
