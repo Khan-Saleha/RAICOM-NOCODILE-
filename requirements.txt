@@ -11,5 +11,4 @@ ultralytics==8.2.48
 rospy
 sensor_msgs
 cv_bridge
-std_msgs
 geometry_msgs
