@@ -198,7 +198,7 @@ class TrafficController:
         red_ratio = red_pixels / total_pixels
         green_ratio = green_pixels / total_pixels
         
-        if red_ratio > 0.1:  # Threshold for red detection
+        if red_ratio > 0.1 and total_pixels>=12000:  # Threshold for red detection
             self.red_light_detected = True
         elif green_ratio > 0.1:  # Threshold for green detection
             self.green_light_detected = True
@@ -360,3 +360,4 @@ if __name__ == '__main__' or True:# !-------------
     except Exception as e:
         rospy.logerr(f"Traffic Controller error: {e}")
         while True:pass
+
